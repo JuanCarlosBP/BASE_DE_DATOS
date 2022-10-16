@@ -1,0 +1,17 @@
+ALTER TABLE mueble DROP CONSTRAINT mue_val_CK;
+ALTER TABLE mueble CHANGE COLUMN valoración_clientes estrellas TINYINT UNSIGNED;
+ALTER TABLE mueble DROP COLUMN color;
+ALTER TABLE mueble MODIFY estado_catálogo INT;
+ALTER TABLE mueble ADD INDEX ind_mue_est (estrellas, estado_catálogo);
+ALTER TABLE mueble ADD CONSTRAINT CHECK (estrellas BETWEEN 1 AND 5);
+ALTER TABLE fabricado DROP foreign key com_id_c_FK;
+ALTER TABLE fabricado DROP PRIMARY KEY;
+ALTER TABLE fabricado ADD id_fabricado INT PRIMARY KEY AUTO_INCREMENT;
+ALTER TABLE fabricado ADD CONSTRAINT com_id_c_FK FOREIGN KEY (id_componente) REFERENCES componente(id_componente) ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE VIEW salas AS SELECT sala, pasillo FROM ubicación;
+SELECT * FROM salas;
+CREATE USER gerente@'%' IDENTIFIED BY 'gerente';
+GRANT ALL ON muebles_bd03 TO gerente@'%' WITH GRANT OPTION;
+CREATE USER empleado@'%' IDENTIFIED BY 'empleado';
+GRANT INSERT, SELECT, UPDATE, DELETE ON muebles_bd03.* TO empleado@'%';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM empleado@'%';
